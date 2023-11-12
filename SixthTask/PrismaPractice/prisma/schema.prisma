@@ -9,3 +9,112 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Battery {
+  id              Int      @id @default(autoincrement())
+  capacity        Int      @db.SmallInt
+  price           Decimal  @db.Money 
+  expirationDate  DateTime @db.Date
+
+  //relations
+  brand           Brand    @relation(fields: [brandID], references: [id])
+  brandID         Int  
+
+  smartphones Smartphone[]
+}
+
+model Brand {
+  id        Int       @id @default(autoincrement())
+  name      String    @db.VarChar(20)
+  founded   DateTime  @db.Date
+
+  //relations
+  batteries   Battery[]  
+  cameras     Camera[]
+  smartphones Smartphone[]
+  processors  Processor[]
+  displays    Display[]
+}
+
+model Camera {
+  id                  Int         @id @default(autoincrement())
+  name                String      @db.VarChar(20)
+  price               Decimal     @db.Money
+  withStabilisation   Boolean     @db.Boolean
+
+  //relations
+  brand               Brand       @relation(fields: [brandID], references: [id]) 
+  brandID             Int   
+
+  resolution          Resolution  @relation(fields: [resolutionId], references: [id])
+  resolutionId        Int
+
+  smartphones Smartphone[]
+}
+
+model Processor {
+  id        Int             @id @default(autoincrement())
+  name      String          @db.VarChar(20)
+
+  //relations
+  brand           Brand     @relation(fields: [brandID], references: [id])
+  brandID         Int  
+  cores     Core[]   
+  smartphones Smartphone[] 
+}
+
+model Display {
+  id              Int         @id @default(autoincrement())
+  name            String      @db.VarChar(20)
+
+  //relations   
+  brand           Brand       @relation(fields: [brandID], references: [id])
+  brandID         Int  
+  resolution      Resolution  @relation(fields: [resolutionId], references: [id])
+  resolutionId    Int 
+
+  smartphones Smartphone[]
+}
+
+model Resolution {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(20)
+  width     Int      @db.SmallInt
+  height    Int      @db.SmallInt
+
+  //relations
+  cameras   Camera[]
+  displays  Display[]
+}
+
+model Core {
+  id        Int       @id @default(autoincrement())
+  quantity  Int       @db.SmallInt 
+  frequency Decimal   @db.Decimal(20, 2)
+  name      String    @db.VarChar(20)
+
+  //relations
+  processors Processor[]
+}
+
+model Smartphone {
+  id        Int             @id @default(autoincrement())
+  model     String          @db.VarChar(20)
+
+  //relations
+  battery       Battery     @relation(fields: [batteryId], references: [id])
+  batteryId      Int
+
+  camera        Camera      @relation(fields: [cameraId], references: [id])
+  cameraId      Int
+
+  processor     Processor   @relation(fields: [processorId], references: [id])
+  processorId   Int
+
+  display       Display     @relation(fields: [displayId], references: [id])
+  displayId     Int
+
+  brand         Brand       @relation(fields: [brandId], references: [id])
+  brandId       Int 
+}
+
