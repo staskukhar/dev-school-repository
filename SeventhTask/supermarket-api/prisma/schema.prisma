@@ -9,3 +9,66 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Product {
+  id        Int       @id @default(autoincrement())
+  name      String    @db.VarChar(20)
+  category  Category  @default(Other)
+  amount    Int
+  price     Decimal   @db.Money
+  
+  orders ProductsOnOrder[]
+}
+
+enum Category {
+  Food
+  Clothes
+  Hygiene
+  Other
+}
+
+model Customer {
+  id          Int       @id @default(autoincrement())
+  firstName   String    @db.VarChar(20)
+  lastName    String    @db.VarChar(20)
+  middleName  String?   @db.VarChar(20)
+  email       String    @db.VarChar(320) @unique
+  birthDate   DateTime  @db.Date
+  orders      Order[]
+}
+
+model Employee {
+  id          Int       @id @default(autoincrement()) 
+  firstName   String    @db.VarChar(20)
+  lastName    String    @db.VarChar(20)
+  middleName  String?   @db.VarChar(20)
+  position    String    @db.VarChar(30)
+  orders      Order[]
+}
+
+model Order {
+  id            Int       @id @default(autoincrement()) 
+  orderAddress  String    @db.VarChar(40)
+  deliveryCost  Decimal   @db.Money
+  orderDate     DateTime  @db.Date @default(now())
+
+  //relations
+  employee      Employee   @relation(fields: [employeeId], references: [id])
+  employeeId    Int            
+
+  customer      Customer  @relation(fields: [customerId], references: [id])
+  customerId    Int     
+
+  products      ProductsOnOrder[]
+}
+
+model ProductsOnOrder {
+  id            Int       @id @default(autoincrement())
+  amount        Int       @db.SmallInt
+  //relations
+  product       Product   @relation(fields: [productId], references: [id])
+  productId     Int       
+
+  order         Order     @relation(fields: [orderID], references: [id])
+  orderID       Int 
+}
