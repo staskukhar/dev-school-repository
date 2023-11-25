@@ -1,6 +1,5 @@
 import { Controller, Get, HttpException, HttpStatus, Param, ParseIntPipe } from '@nestjs/common';
 import { CustomerService } from './customer.service';
-import { NotFoundError } from 'rxjs';
 
 @Controller('customer')
 export class CustomerController {

@@ -1,4 +1,4 @@
-import { Controller, Delete, HttpCode, Param, ParseIntPipe } from '@nestjs/common';
+import { Controller, Delete, Param, ParseIntPipe } from '@nestjs/common';
 import { OrderService } from './order.service';
 
 @Controller('order')

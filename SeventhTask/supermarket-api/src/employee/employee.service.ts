@@ -1,7 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { Employee, Prisma } from '@prisma/client';
-import { error } from 'console';
-import { NotFoundError } from 'rxjs';
+import { Employee } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()

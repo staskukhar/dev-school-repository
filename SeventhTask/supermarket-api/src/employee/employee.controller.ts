@@ -1,5 +1,4 @@
 import { Controller, Param, ParseIntPipe, Patch, Body, HttpException, HttpStatus } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
 import { EmployeeService } from './employee.service';
 import { Employee as EmployeeModel} from '@prisma/client';
 
