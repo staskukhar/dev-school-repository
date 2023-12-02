@@ -1,5 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Employee } from '@prisma/client';
+import { EmployeeDTO } from 'DTOs/employeeDTO';
+import { EmployeeNotFoundException } from 'exceptions/employeeNotFoundException';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
@@ -8,14 +10,19 @@ export class EmployeeService {
         private prismaService: PrismaService
     ) {}
 
-    async updateEmployeeById(id: number, employeeToUpdate: Employee): Promise<Employee> | null{
+    async updateEmployeeById(id: number, employeeToUpdate: EmployeeDTO): Promise<Employee> | null{
         return this.prismaService.employee.update({
             where: {
                 id: id,
             },
-            data: employeeToUpdate,
+            data: {
+                firstName: employeeToUpdate.firstName,
+                lastName: employeeToUpdate.lastName,
+                middleName: employeeToUpdate.middleName,
+                position: employeeToUpdate.position,
+            },
         }).catch((error) =>{
-            throw new HttpException('Employee with such id not found', HttpStatus.NOT_FOUND)
+            throw new EmployeeNotFoundException()
         });  
     }
 }
