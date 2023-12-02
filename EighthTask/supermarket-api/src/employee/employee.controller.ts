@@ -1,6 +1,7 @@
-import { Controller, Param, ParseIntPipe, Patch, Body, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Param, ParseIntPipe, Patch, Body, HttpException, HttpStatus, ValidationPipe } from '@nestjs/common';
 import { EmployeeService } from './employee.service';
 import { Employee as EmployeeModel} from '@prisma/client';
+import { EmployeeDTO } from 'DTOs/employeeDTO';
 
 @Controller('employee')
 export class EmployeeController {
@@ -11,7 +12,7 @@ export class EmployeeController {
     @Patch(':id')
     async updateEmployeeById(
         @Param('id', ParseIntPipe) id: number,
-        @Body() employeeToUpdate: EmployeeModel
+        @Body(new ValidationPipe()) employeeToUpdate: EmployeeDTO
     ) {
         return this.employeeService.updateEmployeeById(id, employeeToUpdate)
     }
