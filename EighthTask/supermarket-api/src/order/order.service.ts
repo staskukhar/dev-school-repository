@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Order } from '@prisma/client';
+import { OrderNotFoundException } from 'exceptions/orderNotFoundException';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
@@ -14,7 +15,7 @@ export class OrderService {
                 id: id,
             },
         }).catch((error) => {
-            throw new HttpException('Order with such id not found', HttpStatus.NOT_FOUND)
+            throw new OrderNotFoundException()
         });
 
         return deletedOrder;

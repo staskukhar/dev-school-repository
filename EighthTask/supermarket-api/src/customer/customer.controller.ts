@@ -1,5 +1,6 @@
-import { Controller, Get, HttpException, HttpStatus, Param, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, HttpException, HttpStatus, Param, ParseIntPipe, UsePipes } from '@nestjs/common';
 import { CustomerService } from './customer.service';
+import { CustomerIdPipeParse } from 'pipes/CustomerIdPipeParse';
 
 @Controller('customer')
 export class CustomerController {
@@ -8,12 +9,7 @@ export class CustomerController {
     ) {}
 
     @Get(':id/orders')
-    async getOrdersById(@Param('id', ParseIntPipe) id: number) {
-        const orders = await this.customerService.getOrdersByCustomerId(id);
-        
-        if(orders == null || orders.length === 0) {
-            throw new HttpException('Customer with such id not found', HttpStatus.FORBIDDEN);
-        }
-        return orders;
+    async getOrdersById(@Param('id', CustomerIdPipeParse) id: number) {
+        return this.customerService.getOrdersByCustomerId(id);
     }
 }
